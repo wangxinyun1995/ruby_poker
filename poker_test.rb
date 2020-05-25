@@ -1,7 +1,7 @@
 require './poker.rb'
 require 'test/unit'
 
-class PokerTest < Test::Unit::TestCase 
+class PokerTest < Test::Unit::TestCase
   def setup
     # 初始化leno和judy的值
     @leno_poker = Poker.new('C9D7D9S7D2')
@@ -25,18 +25,18 @@ class PokerTest < Test::Unit::TestCase
     assert_equal('C9D7D9S7D2', @leno_poker.hand, 'hand is not correct!')
     assert_equal('HAC5S8D8C10', @judy_poker.hand, 'hand is not correct!')
     # 测试.dealed_hand的值是否正确
-    assert_equal(["C", "9", "D", "7", "D", "9", "S", "7", "D", "2"], 
+    assert_equal(["C", "9", "D", "7", "D", "9", "S", "7", "D", "2"],
                   @leno_poker.dealed_hand, 'leno dealed_hand is not correct!')
-    assert_equal(["H", "A", "C", "5", "S", "8", "D", "8", "C", "0"], 
+    assert_equal(["H", "A", "C", "5", "S", "8", "D", "8", "C", "0"],
                   @judy_poker.dealed_hand, 'judy dealed_hand is not correct!')
   end
 
   def test_record_init
     # 测试leno的record_init
-    assert_equal({"C_9"=>9, "D_7"=>7, "D_9"=>9, "S_7"=>7, "D_2"=>2}, 
+    assert_equal({"C_9"=>9, "D_7"=>7, "D_9"=>9, "S_7"=>7, "D_2"=>2},
                   @leno_record_init, 'judy record id not correct!')
     # 测试judy的record_init
-    assert_equal({"H_1"=>1, "C_5"=>5, "S_8"=>8, "D_8"=>8, "C_10"=>10}, 
+    assert_equal({"H_1"=>1, "C_5"=>5, "S_8"=>8, "D_8"=>8, "C_10"=>10},
                   @judy_record_init, 'judy record id not correct!')
   end
 
@@ -64,10 +64,22 @@ class PokerTest < Test::Unit::TestCase
 
   def test_compare_one
     # 比较setup方法里面默认的leon和judy的胜负
-    assert_equal('leon', Poker.compare_one(@leno_poker, @judy_poker), "compare result wrong")
+    assert_equal(["leon", "C9D7D9S7D2;HAC5S8D8C10"],
+                  Poker.compare_one(@leno_poker, @judy_poker), "compare result wrong")
+
     # 提供额外两组测试数据
-    assert_equal('judy', Poker.compare_one(Poker.new('C4C9H4H7CK'), Poker.new('C3H6D3S9D8')), "compare result wrong")
-    assert_equal('judy', Poker.compare_one(Poker.new('C6D6D4HAS6'), Poker.new('DJS5S3C2S9')), "compare result wrong")
+    assert_equal(["judy", "C4C9H4H7CK;C3H6D3S9D8"],
+                  Poker.compare_one(Poker.new('C4C9H4H7CK'), Poker.new('C3H6D3S9D8')),
+                  "compare result wrong")
+
+    assert_equal(["judy", "C6D6D4HAS6;DJS5S3C2S9"],
+                  Poker.compare_one(Poker.new('C6D6D4HAS6'), Poker.new('DJS5S3C2S9')),
+                  "compare result wrong")
+
+    assert_equal(["judy", "H3CAS5HQHA;S10D6SKD2SJ"],
+                  Poker.compare_one(Poker.new('H3CAS5HQHA'), Poker.new('S10D6SKD2SJ')),
+                  "compare result wrong")
+
     # leno的记录有问题是,返回nil,结果不会记录这一条
     assert_nil(Poker.compare_one(Poker.new('D4C5D3C'), Poker.new('D8H9SQD5S4')), "compare result wrong")
     # judy的记录有问题
@@ -77,6 +89,6 @@ class PokerTest < Test::Unit::TestCase
   end
 
   def test_compare
-    assert_equal({'leon'=>1365, 'judy'=>1359}, Poker.compare, "finnal result wrong")
+    assert_equal({'leon'=>1362, 'judy'=>1362}, Poker.compare, "finnal result wrong")
   end
 end
