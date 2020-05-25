@@ -73,7 +73,7 @@ class Poker
     values = record_list.values
     remainder = (values.inject(:+))%10
     count = values.count
-    [*0..(count-1)].each do |i|
+    [*0..(count-2)].each do |i|
       [*(i+1)..(count-1)].each do |j|
         sum = values[i] + values[j]
         if sum%10 == remainder
